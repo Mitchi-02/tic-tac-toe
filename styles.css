@@ -68,6 +68,8 @@ body{
     background-color: red;
     grid-template-columns: repeat(3, 1fr);
     grid-auto-flow: dense;
+    max-height:250px;
+    overflow-y:scroll;
 }
 
 .table *{
@@ -160,7 +162,7 @@ body{
     margin-bottom: 15px
 }
 
-.pop-up .btn{
+.pop-up .btn, #clear-history{
     background-color: blue;
 }
 

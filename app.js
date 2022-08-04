@@ -10,6 +10,8 @@ const reset_scoreBtn = document.getElementById('reset-score');
 const pop = document.querySelector('.pop-up');
 const darkEffect = document.querySelector('.dark-effect');
 const submitNamesBtn = document.getElementById('submit-btn');
+const clearHistoryBtn = document.getElementById('clear-history');
+
 
 // Classes used
 class Player{
@@ -18,24 +20,28 @@ class Player{
     color;
     score;
     element;
-    constructor(id, name, color){
+    constructor(id, name, color, score=0){
         this.id = id;
         this.name = name;
         this.color = color;
-        this.score = 0;
+        this.score = score;
         scoreTable.push(this);
-        this.element = document.getElementById(`player-${this.id}`);
-        this.element.children[0].innerText = this.name;
-        this.element.children[1].innerText = this.score;
-        this.element.children[2].style.backgroundColor = this.color;
     }
     addScore() {
         this.score++;
-        this.element.children[1].innerText = this.score;
+        const temp = document.getElementById(`player-${this.id}`);
+        temp.children[1].innerText = this.score;
     }
     clearScore(){
         this.score = 0;
-        this.element.children[1].innerText = this.score;
+        const temp = document.getElementById(`player-${this.id}`);
+        temp.children[1].innerText = this.score;
+    }
+    addToTable(){
+        const temp = document.getElementById(`player-${this.id}`);
+        temp.children[0].innerText = this.name;
+        temp.children[1].innerText = this.score;
+        temp.children[2].style.backgroundColor = this.color;
     }
 }
 class Game{
@@ -43,25 +49,25 @@ class Game{
     id;
     winner;
     time;
-    element;
     constructor(winner, time){
         Game.total++;
         this.id = Game.total;
         this.time = time;
         this.winner = winner;
-        this.element = document.createElement('div');
-        this.element.innerHTML = 
+        historiqTable.push(this);
+    }
+    addToTable(){
+        const temp = document.createElement('div');
+        temp.innerHTML = 
         `
         <p>${this.id}</p>
         <p>${this.winner}</p>
         <p>${this.time}</p>
         `;
-    }
-    addToTable(){
-        historiqTableElement.append(this.element);
-        historiqTable.push(this);
+        historiqTableElement.append(temp);
     }
 }
+
 
 // Variables used
 let mapMatrice = new Array(3);
@@ -73,18 +79,50 @@ for (let row = 0; row < mapMatrice.length; row++) {
 }
 const classes = ['X', 'O'];
 let time = '';
-let historiqTable = [];
-let scoreTable = [];
 let seconds = 0;
 let minutes = 0;
 let hours = 0;
 let gameStatus = 'stopped';
-let namesEntered = false;
 let currentTurn = null; // 0 for player and 1 for player 2
 let interval = null;
-let player1 = null;
-let player2 = null;
 let line = null;
+let fieldsLeft = 9;
+let namesEntered = JSON.parse(localStorage.getItem('namesEntered')) || false;
+let historiqTable = JSON.parse(localStorage.getItem('historiqTable')) || [];
+let scoreTable = JSON.parse(localStorage.getItem('scoreTable')) || [];
+let player1, player2;
+if(scoreTable.length == 0){
+    player1 = null;
+    player2 = null;
+}
+else{
+    player1 = new Player(1, scoreTable[0].name, scoreTable[0].color, scoreTable[0].score);
+    player2 = new Player(2, scoreTable[1].name, scoreTable[1].color, scoreTable[1].score);
+    scoreTable[0] = player1;
+    scoreTable[1] = player2;
+}
+
+
+//initialization
+document.getElementById('player1-name').value = '';
+document.getElementById('player2-name').value = '';
+historiqTable.forEach(game => { //filling games table
+    const temp = document.createElement('div');
+        temp.innerHTML = 
+        `
+        <p>${game.id}</p>
+        <p>${game.winner}</p>
+        <p>${game.time}</p>
+        `;
+        historiqTableElement.append(temp);
+});
+scoreTable.forEach(player => { //filling score table
+    const temp = document.getElementById(`player-${player.id}`);
+        temp.children[0].innerText = player.name;
+        temp.children[1].innerText = player.score;
+        temp.children[2].style.backgroundColor = player.color;
+});
+
 
 //functions used
 function timer(){
@@ -132,8 +170,29 @@ function emptyMap(){
     }
 }
 
+function emptyScoreTable(){
+    scoreTableElement.innerHTML = 
+    `<div>
+        <p>Player name</p>
+        <p>Player score</p>
+        <p>Player color</p>
+    </div>
+    <div id="player-1">
+        <p id="name-1"></p>
+        <p id="score-1"></p>
+        <p id="color-1"></p>
+    </div>
+    <div id="player-2">
+        <p id="name-2"></p>
+        <p id="score-2"></p>
+        <p id="color-2"></p>
+    </div>`;
+    scoreTable = [];
+}
+
 function emptyHistoriqTable(){
     historiqTable = [];
+    Game.total = 0;
     let skip = true;
     Array.from(historiqTableElement.children).forEach(element => {
         if(skip) skip = false
@@ -148,7 +207,6 @@ function startGame(){
     gameStatus = 'started';
     currentTurn = 0;
     currentPlayerElement.innerText = player1.name;
-    errorElement.innerText = ``;
 }
 
 function restartGame(){
@@ -162,6 +220,7 @@ function restartGame(){
     currentTurn = 0;
     emptyMap();
     currentPlayerElement.innerText = '';
+    fieldsLeft = 9;
 }
 
 function changeTurn(){
@@ -188,7 +247,9 @@ function hidePopUp(){
 
 function createPlayers(){
     player1 = new Player(1, document.getElementById('player1-name').value, 'blue');
+    player1.addToTable();
     player2 = new Player(2, document.getElementById('player2-name').value, 'green');
+    player2.addToTable();
 }
 
 function createLine(){
@@ -240,6 +301,13 @@ function verifyDiagonal(row, column){
 
 
 //event listeners
+window.addEventListener('beforeunload', function(){
+    localStorage.setItem('historiqTable', JSON.stringify(historiqTable));
+    localStorage.setItem('scoreTable', JSON.stringify(scoreTable));
+    localStorage.setItem('namesEntered', namesEntered);
+    console.log('about to refresh');
+});
+
 darkEffect.addEventListener('click', function(e){
     hidePopUp();
 });
@@ -287,6 +355,7 @@ mapElement.addEventListener('click',function(e){
     }
 
     //play turn
+    fieldsLeft --;
     errorElement.innerText = ``;
     targetedField.style.backgroundColor = scoreTable[currentTurn].color;
     targetedField.classList.add(classes[currentTurn]);
@@ -298,13 +367,26 @@ mapElement.addEventListener('click',function(e){
         alert(`Winner is ${scoreTable[currentTurn].name}`);
         restartGame();
     }
+    else if(fieldsLeft == 0){
+        const game = new Game('none', time);
+        game.addToTable();
+        alert(`Draw, No Winner !`);
+        restartGame();
+    }
     else{
         changeTurn();
     } 
 });
 
-
-
-//initialization
-document.getElementById('player1-name').value = '';
-document.getElementById('player2-name').value = '';
+clearHistoryBtn.addEventListener('click', function(){
+    if(namesEntered){
+        localStorage.clear();
+        resetScore();
+        emptyScoreTable();
+        namesEntered = false;
+        player1 = null;
+        player2 = null;
+        document.getElementById('player1-name').value = '';
+        document.getElementById('player2-name').value = '';
+    }
+});
