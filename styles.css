@@ -10,14 +10,22 @@ body{
     background-color: rgb(216, 216, 216);
     display: flex;
     justify-content: center;
+    font-family: Poppins, sans-serif;
 }
 
 .container{
-    width: 100%;
+    padding: 20px;
     height: 100%;
     justify-content: space-evenly;
     display: flex;
+    gap: 20px;
     align-items: center;
+}
+@media screen and (max-width: 800px){
+    .container{
+        flex-direction: column;
+    }
+    
 }
 
 .map{
@@ -60,6 +68,12 @@ body{
     flex-direction: column;
 }
 
+@media screen and (max-width: 800px){
+    .right{
+        width: 100%;
+    }
+}
+
 .table{
     display: grid;
     margin-bottom: 30px;
@@ -70,6 +84,13 @@ body{
     grid-auto-flow: dense;
     max-height:250px;
     overflow-y:scroll;
+}
+
+@media screen and (max-width: 800px){
+    .table{
+        font-size: 14px;
+    }
+    
 }
 
 .table *{
@@ -87,6 +108,8 @@ body{
 .buttons{
     display: flex;
     justify-content: space-evenly;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .btn{
@@ -96,12 +119,19 @@ body{
     border: none;
     border-radius: 20px;
     color: white;
+    cursor: pointer;
+    position: relative;
+    transition: all .3s ease-in-out;
+}
+
+@media screen and (max-width: 800px){
+    .btn{
+        font-size: 16px;
+    }
 }
 
 .btn:hover{
-    position: relative;
-    left: 10px;
-    bottom: 5px;
+    translate: 10px -5px;
 }
 
 #start-restart{
