@@ -320,7 +320,7 @@ main {
 footer {
   margin-top: 2rem;
   padding-bottom: 5rem;
-  background: url('/images/footer.png');
+  background: url('./images/footer.png');
   background-repeat: repeat;
   min-height: 440px;
   display: flex;
