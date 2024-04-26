@@ -1,74 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" />
-        <link rel="stylesheet" href="./styles.css">
-        <script defer src="./app.js"></script>
-        <title>Tic Tac Toe Game</title>
-    </head>
-    <body>
-        <div class="dark-effect"></div>
-        <div class="pop-up">
-            <h2>Enter players infos</h2>
-            <input type="text" placeholder="Player1" id="player1-name">
-            <input type="text" placeholder="Player2" id="player2-name">
-            <button id="submit-btn"  class="btn">Submit</button> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400..900&family=Hanalei&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/cocon" rel="stylesheet" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+    <title>Tic Tac Toe Game</title>
+  </head>
+  <body>
+    <div class="dark-effect"></div>
+    <div class="pop-up">
+      <h2>Enter players infos</h2>
+      <div>
+        <input
+          type="text"
+          placeholder="Player1"
+          id="player1-name"
+          class="input"
+        />
+        <input
+          type="text"
+          placeholder="Player2"
+          id="player2-name"
+          class="input"
+        />
+        <button id="submit-btn" class="btn">Submit</button>
+      </div>
+    </div>
+    <header class="page-container">
+      <img src="./images/logo.png" alt="logo" width="27" height="27" />
+      <span>TicTocToe</span>
+    </header>
+    <main class="page-container">
+      <section class="hero">
+        <div>
+          <h1>Testez le TicTocToe en ligne !</h1>
+          <p>
+            Le tic-tac-toe, aussi appelé « morpion » (par analogie avec le jeu
+            de morpion) et « oxo » en Belgique, est un jeu de réflexion se
+            pratiquant à deux joueurs, tour par tour, dont le but est de créer
+            le premier un alignement. Le jeu se joue généralement en dessinant
+            sur papier au crayon.
+          </p>
+          <a class="btn" href="#game" role="button">Commencer</a>
         </div>
-        <div class="container">
+        <div>
+          <img
+            src="./images/hero.gif"
+            alt="tic-tac-toe"
+            width="262"
+            height="262"
+          />
+        </div>
+      </section>
+      <section class="description">
+        <h2>
+          Voici comment jouer au Tic-Tac-Toe, un jeu sur une grille de 3 x 3.
+        </h2>
+        <p>
+          Deux joueurs s'affrontent. Ils doivent remplir chacun à leur tour une
+          case de la grille avec le symbole qui leur est attribué : O ou X. Le
+          gagnant est celui qui arrive à aligner trois symboles identiques,
+          horizontalement, verticalement ou en diagonale. Il est coutume de
+          laisser le joueur jouant X effectuer le premier coup de la partie.
+        </p>
+        <p class="case">Une partie gagnée par le joueur X :</p>
+        <div>
+          <img src="./images/win.png" alt="win" width="762" height="89" />
+        </div>
+        <p class="case">Une partie nulle :</p>
+        <div>
+          <img src="./images/draw.png" alt="draw" width="762" height="100" />
+        </div>
+        <p class="case">
+          En raison du nombre de combinaisons limité, l'analyse complète du jeu
+          est facile à réaliser : si les deux joueurs jouent chacun de manière
+          optimale, la partie doit toujours se terminer par un match nul.
+        </p>
+      </section>
+      <section id="game" class="page-container">
+        <h3 id="timer">00:00:00</h3>
+        <div class="game-container">
+          <div>
+            <ul class="map">
+              <li class="cell" id="00"></li>
+              <li class="cell" id="01"></li>
+              <li class="cell" id="02"></li>
+              <li class="cell" id="10"></li>
+              <li class="cell" id="11"></li>
+              <li class="cell" id="12"></li>
+              <li class="cell" id="20"></li>
+              <li class="cell" id="21"></li>
+              <li class="cell" id="22"></li>
+            </ul>
+            <div class="turn">
+              <span id="current-player"></span>
+            </div>
+          </div>
 
-            <div class="left">
-                <div id="timer">00:00:00</div>
-                <div class="map">
-                    <div class="case" id="00"></div>
-                    <div class="case" id="01"></div>
-                    <div class="case" id="02"></div>
-                    <div class="case" id="10"></div>
-                    <div class="case" id="11"></div>
-                    <div class="case" id="12"></div>
-                    <div class="case" id="20"></div>
-                    <div class="case" id="21"></div>
-                    <div class="case" id="22"></div>
-                </div>
-                <div class="turn">
-                    <span id="current-player"></span>
-                    <br> <span id="error"></span>
-                </div>
+          <div class="right">
+            <div class="table" id="score-table">
+              <div>
+                <p>Nom</p>
+                <p>Score</p>
+                <p>Couleur</p>
+              </div>
+              <div id="player-1">
+                <p id="name-1"></p>
+                <p id="score-1"></p>
+                <p id="color-1"></p>
+              </div>
+              <div id="player-2">
+                <p id="name-2"></p>
+                <p id="score-2"></p>
+                <p id="color-2"></p>
+              </div>
             </div>
-            
-            <div class="right">
-                <div class="table" id="score-table">
-                    <div>
-                        <p>Player name</p>
-                        <p>Player score</p>
-                        <p>Player color</p>
-                    </div>
-                    <div id="player-1">
-                        <p id="name-1"></p>
-                        <p id="score-1"></p>
-                        <p id="color-1"></p>
-                    </div>
-                    <div id="player-2">
-                        <p id="name-2"></p>
-                        <p id="score-2"></p>
-                        <p id="color-2"></p>
-                    </div>
-                </div>
-                <div class="table" id="historique-table">
-                    <div>
-                        <p>Game</p>
-                        <p>Winner</p>
-                        <p>Time</p>
-                    </div>
-                </div>
-                <div class="buttons">
-                    <button id="start-restart" class="btn">Start Game</button>
-                    <button id="reset-score" class="btn">Reset Score</button>
-                    <button id="clear-history" class="btn">Clear history</button>
-                </div>
+            <div class="table" id="historique-table">
+              <div>
+                <p>Partie</p>
+                <p>Gagnant</p>
+                <p>Temps</p>
+              </div>
             </div>
+            <div class="buttons">
+              <button id="start-restart" class="btn">Commencer</button>
+              <button id="reset-score" class="btn">
+                Réinitialiser le score
+              </button>
+              <button id="clear-history" class="btn">
+                Effacer l'historique
+              </button>
+            </div>
+          </div>
         </div>
-    </body>
+      </section>
+    </main>
+
+    <footer>
+      <div class="page-container">
+        <img src="./images/logo.png" alt="logo" width="27" height="27" />
+        <span>TicTocToe</span>
+      </div>
+      <p class="page-container">
+        Oualid Kacemi | UE libre L3 - Web, JavaScript et Simulation Scientifique
+        | Eric COGNERAS
+      </p>
+    </footer>
+  </body>
 </html>
